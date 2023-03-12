@@ -1,0 +1,14 @@
+.button{
+    display: block;
+    font-weight: bold;
+    font-size: 20px;
+    min-height: 1.8rem;
+    color: aliceblue;
+    background-color: rgb(213, 60, 213);
+    border: 1px solid transparent;
+    padding: 5px 0;
+    border-radius: 10px;
+}
+.button:hover, .button:active{
+  background: purple;
+}
