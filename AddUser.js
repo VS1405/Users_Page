@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import classes from './AddUser.module.css'
 import Button from '../Button'
 import Card from '../Card'
@@ -6,27 +6,24 @@ import ErrorModal from '../ErrorModal'
 
 const AddUser = props => {
 
-    const [enteredName, setName] = useState('');
-    const [enteredAge, setAge] = useState('');
+    const nameInputRef = useRef();
+    const ageInputRef = useRef();
     const [error, setError] = useState()
-    const nameHandler = (event) => {
-        setName(event.target.value)
-    }
-    const ageHandler = (event) => {
-        setAge(event.target.value)
-    }
 
     const addUserHandler = (event) => {
         event.preventDefault();
+        const nameRef = nameInputRef.current.value
+        const ageRef = ageInputRef.current.value
+        
         {/* Validation of input => entered input is right or wrong */ }
-        if (enteredName.trim().length === 0 || enteredAge.trim().length === 0) {
+        if (nameRef.trim().length === 0 || ageRef.trim().length === 0) {
             setError({
                 title: "Invalid name and age entered",
                 msg: 'Please enter valid Name and Age'
             })
             return;
         }
-        if (+enteredAge < 1) {
+        if (+ageRef < 1) {
             setError({
                 title: "Invalid age ",
                 msg: 'Please enter valid age'
@@ -35,17 +32,17 @@ const AddUser = props => {
         }
         {/* End of validation */ }
 
-        // console.log(enteredName, enteredAge); 
-        props.onAddUser(enteredName, enteredAge)
-        setName('')
-        setAge('')
+        // console.log(nameRef, ageRef); 
+        props.onAddUser(nameRef, ageRef)
+        nameInputRef.current.value = "";
+        ageInputRef.current.value = ""
     }
 
     const errorHandler =()=>{
         setError(null)  //null because it gives false value 
     }
     return (
-        <div>
+        <React.Fragment>
             {error &&
                 <ErrorModal title={error.title} msg={error.msg} onConfirm={errorHandler}/>
             }
@@ -53,18 +50,16 @@ const AddUser = props => {
                 <form onSubmit={addUserHandler} className={classes.formControl}>
                     <label htmlFor="username">Username</label>
                     <input id="username" type="text"
-                        value={enteredName}
-                        onChange={nameHandler}
+                        ref={nameInputRef}
                     />
                     <label htmlFor="age">Age (years)</label>
                     <input id="age" type="number"
-                        value={enteredAge}
-                        onChange={ageHandler}
+                        ref={ageInputRef}
                     />
                     <Button type="submit">Add User</Button>
                 </form>
             </Card>
-        </div>
+        </React.Fragment>
     )
 }
 export default AddUser;
